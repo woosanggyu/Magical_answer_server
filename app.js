@@ -5,7 +5,7 @@ var logger = require('morgan');
 const models = require('./models/index');
 
 var question = require('./routes/question');
-var usersRouter = require('./routes/users');
+var requestdata = require('./routes/requestdata');
 
 var app = express();
 
@@ -23,6 +23,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/question', question);
-app.use('/users', usersRouter);
+app.use('/api/requestdata', requestdata);
 
 module.exports = app;

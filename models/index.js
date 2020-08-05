@@ -35,5 +35,6 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.nobase = require('./nobase')(sequelize, Sequelize);
+db.areacode = require('./areacode')(sequelize, Sequelize);
 
 module.exports = db;
