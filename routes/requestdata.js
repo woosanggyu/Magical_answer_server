@@ -124,4 +124,63 @@ router.post('/doitdata', function(req, res, next) {
     console.log(err);
   })
 })
+
+router.post('/enjoydata', function(req, res, next) {
+  let body = req.body;
+  console.log("바디 :", body);
+
+  models.areacode.findOne({
+    where: {
+      areafather : body.areafather,
+      areaname : body.areaname
+    }
+  })
+  .then(result => {
+    // console.log(result);
+
+    let dataurl = {
+      url: 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey='+process.env.SERVICE_KEY,
+      method:'GET',
+      qs: {
+        pageNo : 1,
+        numOfRows : 100,
+        MobileApp : "MagicalAnswer",
+        MobileOS : "AND",
+        arrange : "A",
+        cat1 : "A02",
+        contentTypeId : 12,
+        areaCode : result.areacode,
+        sigunguCode : result.sigunguCode,
+        cat2 : "A0203",
+        cat3 : null,
+        listYN : "Y",
+        modifiedtime : null,
+      },
+      json:true
+    }
+    
+    request(dataurl, function(err, respon, body) {
+
+      var num = body.response.body.items.item.length;
+
+      var title = new Array;
+      var addr = new Array;
+
+      for(i=0; i < num ;i++){
+        title.push(body.response.body.items.item[i].title)
+        addr.push(body.response.body.items.item[i].addr1)
+      }
+
+      var number = getRandomInt(0, num-1)
+
+      res.json({
+        title : title[number],
+        address : addr[number] 
+      })
+    })
+  })
+  .catch(err => {
+    console.log(err);
+  })
+})
 module.exports = router;
