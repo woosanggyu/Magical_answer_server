@@ -47,18 +47,22 @@ router.post('/eatdata', function(req, res, next) {
       request(dataurl, function(err, respon, body) {
 
         var num = body.response.body.items.item.length;
-        console.log(num);
 
-        var arr = new Array;
+      var title = new Array;
+      var addr = new Array;
 
-        for(i=0; i < num ;i++){
-          arr.push(body.response.body.items.item[i].title)
-        }
+      for(i=0; i < num ;i++){
+        title.push(body.response.body.items.item[i].title)
+        addr.push(body.response.body.items.item[i].addr1)
+      }
 
-        res.json({
-          answer : arr[getRandomInt(0, num-1)]
-        })
+      var number = getRandomInt(0, num-1)
+
+      res.json({
+        title : title[number],
+        address : addr[number] 
       })
+    })
     })
     .catch(err => {
       console.log(err);
