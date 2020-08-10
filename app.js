@@ -6,6 +6,7 @@ const models = require('./models/index');
 
 var question = require('./routes/question');
 var requestdata = require('./routes/requestdata');
+var user = require('./routes/user');
 
 var app = express();
 
@@ -24,5 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/question', question);
 app.use('/api/requestdata', requestdata);
+app.use('/api/user', user);
 
 module.exports = app;

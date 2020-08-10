@@ -1,10 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const request = require('request')
-const convert = require('xml-js');
+const request = require('request');
 const models = require('../models');
 var dotenv = require('dotenv');
-// const { json } = require('sequelize/types');
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random()*(max-min))+min;
@@ -46,23 +44,26 @@ router.post('/eatdata', function(req, res, next) {
       
       request(dataurl, function(err, respon, body) {
 
-        var num = body.response.body.items.item.length;
+        var item = body.response.body.items.item;
 
-      var title = new Array;
-      var addr = new Array;
+        var title = new Array;
+        var addr = new Array;
 
-      for(i=0; i < num ;i++){
-        title.push(body.response.body.items.item[i].title)
-        addr.push(body.response.body.items.item[i].addr1)
-      }
+        if(item) {
+          var number = getRandomInt(0, item.length-1)
+  
+          title.push(body.response.body.items.item[number].title)
+          addr.push(body.response.body.items.item[number].addr1)
+        } else {
+          title.push("없엉");
+          addr.push("진짜 없엉");
+        }
 
-      var number = getRandomInt(0, num-1)
-
-      res.json({
-        title : title[number],
-        address : addr[number] 
+        res.json({
+          title : title[0],
+          address : addr[0] 
+        })
       })
-    })
     })
     .catch(err => {
       console.log(err);
@@ -106,21 +107,24 @@ router.post('/doitdata', function(req, res, next) {
     
     request(dataurl, function(err, respon, body) {
 
-      var num = body.response.body.items.item.length;
+      var item = body.response.body.items.item;
 
       var title = new Array;
       var addr = new Array;
 
-      for(i=0; i < num ;i++){
-        title.push(body.response.body.items.item[i].title)
-        addr.push(body.response.body.items.item[i].addr1)
+      if(item) {
+        var number = getRandomInt(0, item.length-1)
+
+        title.push(body.response.body.items.item[number].title)
+        addr.push(body.response.body.items.item[number].addr1)
+      } else {
+        title.push("없엉");
+        addr.push("진짜 없엉");
       }
-
-      var number = getRandomInt(0, num-1)
-
+  
       res.json({
-        title : title[number],
-        address : addr[number] 
+        title : title[0],
+        address : addr[0] 
       })
     })
   })
@@ -165,21 +169,24 @@ router.post('/enjoydata', function(req, res, next) {
     
     request(dataurl, function(err, respon, body) {
 
-      var num = body.response.body.items.item.length;
-
+      var item = body.response.body.items.item;
+      
       var title = new Array;
       var addr = new Array;
 
-      for(i=0; i < num ;i++){
-        title.push(body.response.body.items.item[i].title)
-        addr.push(body.response.body.items.item[i].addr1)
+      if(item) {
+        var number = getRandomInt(0, item.length-1)
+
+        title.push(body.response.body.items.item[number].title)
+        addr.push(body.response.body.items.item[number].addr1)
+      } else {
+        title.push("없엉");
+        addr.push("진짜 없엉");
       }
-
-      var number = getRandomInt(0, num-1)
-
+      
       res.json({
-        title : title[number],
-        address : addr[number] 
+        title : title[0],
+        address : addr[0] 
       })
     })
   })

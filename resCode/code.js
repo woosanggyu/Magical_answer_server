@@ -3,6 +3,8 @@ let rescodeObj = {
     Success : 200,
     Failed : 400,
     RequestCode : 404,
+    AuthorityCode : 406,
+    VerifyFailedCode : 500,
 
     //Success & Fail ERROR
     SuccessMessage : "Success",
@@ -14,6 +16,11 @@ let rescodeObj = {
     UpdateError : "Update Error",
     DeleteError : "Delete Error",
 
+    //jsonWebToken Verify ERROR
+    VerifyFailError : "Verify Error",
+
+    // Authority ERROR
+    AuthorityError : "Authority Error",
 };
 
 module.exports = rescodeObj
