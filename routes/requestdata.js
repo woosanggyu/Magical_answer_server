@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
+var dotenv = require('dotenv');
 const request = require('request');
 const models = require('../models');
-var dotenv = require('dotenv');
+const rescodeObj = require('../resCode/code');
+const jwt = require('jsonwebtoken');
+const secretObj = require('../config/jwt');
+const verify = require('../config/verify');
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random()*(max-min))+min;
@@ -195,7 +199,123 @@ router.post('/enjoydata', function(req, res, next) {
   })
 })
 
-router.post('/mymemo', function(req, res, next) {
-    
+router.get('/mymemo', function(req, res, next) {
+  let logincheck = req.headers.token;
+  let body = req.body;
+
+  if (logincheck) {
+    if( verify(logincheck, secretObj.secret)) {
+      
+      models.memo.findAll({
+        where : {
+          Writer : body.nickname 
+        }
+      })
+      .then(memo => {
+        res.json({ answer : memo })
+      })
+      .catch(err => {
+        console.log(err);
+        res.json({ answer : rescodeObj.ReadError })
+      })
+    } else {
+      console.log("토큰이 만료되었습니다.")
+      res.json({ answer : "다시 로그인해 주세요."})
+    }
+  } else {
+    console.log("토큰이 없습니다.")
+    res.json({ answer : "다시 로그인 해주세요."})
+  }
 })
+
+router.post('/addpost', function(req, res, next) {
+  let logincheck = req.headers.token;
+  let body = req.body;
+
+  if (logincheck) {
+    if( verify(logincheck, secretObj.secret)) {
+      models.memo.create({
+        writer : body.nickname,
+        title : body.title,
+        content : body.content,
+        CreateTime : new Date()
+      })
+      .then( result => {
+        res.json({ answer : rescodeObj.SuccessMessage })
+      })
+      .catch(err => {
+        console.log(err);
+        res.json({ answer : rescodeObj.CreateError})
+      })
+    } else {
+      console.log("토큰이 만료되었습니다.")
+      res.json({ answer : "다시 로그인해 주세요."})
+    }
+  } else {
+    console.log("토큰이 없습니다.")
+    res.json({ answer : "다시 로그인 해주세요."})
+  }
+})
+
+router.put('/updatepost', function(req, res, next) {
+  let logincheck = req.headers.token;
+  let body = req.body;
+
+  if (logincheck) {
+    if( verify(logincheck, secretObj.secret)) {
+      models.memo.update({
+        title : body.title,
+        content : body.content,
+        CreateTime : new Date()
+      },
+      {
+        where : { writer : body.nickname, no : body.no }
+      })
+      .then( update => {
+        res.json({ answer: rescodeObj.SuccessMessage })
+      })
+      .catch( err => {
+        console.log(err);
+        res.json({ answer : rescodeObj.CreateError });
+      })
+    } else{
+      console.log("토큰이 만료 되었습니다");
+      res.json({
+        answer : "다시 로그인 해주세요."
+      });
+    }
+  } else {
+    console.log("토큰이 없습니다.")
+    res.json({ answer : "다시 로그인 해주세요."})
+  }
+})
+
+router.delete('/delpost', function(req, res, next) {
+  let logincheck = req.headers.token;
+  let body = req.body;
+
+  if (logincheck) {
+    if( verify(logincheck, secretObj.secret)) {
+      models.memo.destroy({
+        where : { writer : body.nickname, no : body.no }
+      })
+      .then( del => {
+        res.json({ answer: rescodeObj.SuccessMessage })
+      })
+      .catch( err => {
+        console.log(err);
+        res.json({ answer : rescodeObj.DeleteError });
+      });
+    } else{
+      console.log("토큰이 만료 되었습니다");
+      res.json({
+          answer : "다시 로그인 해주세요."
+      });
+    }
+  } else {
+    console.log("토큰이 없습니다.")
+    res.json({ answer : "다시 로그인 해주세요."})
+  }
+})
+
 module.exports = router;
