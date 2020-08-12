@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = (sequelize, DataType) => {
-    var user = sequelize.define('user', {
+    var memo = sequelize.define('memo', {
         no : {
             type: DataType.INTEGER,
             unique : true,
@@ -9,26 +9,16 @@ module.exports = (sequelize, DataType) => {
             primaryKey : true,
             allowNull: false
         },
-        ID : {
-            type: DataType.STRING,
-            unique : true,
-            allowNull: false
-        },
-        Password : {
+        writer : {
             type: DataType.STRING,
             allowNull: false
         },
-        Nickname : {
-            type: DataType.STRING,
-            unique : true,
-            allowNull: false
-        },
-        Gender : {
+        title : {
             type: DataType.STRING,
             allowNull: false
         },
-        Age : {
-            type: DataType.INTEGER,
+        content : {
+            type: DataType.STRING,
             allowNull: false
         },
         CreateTime : {
@@ -39,5 +29,5 @@ module.exports = (sequelize, DataType) => {
     {
         timestamps: false
     });
-    return user;
+    return memo;
 };

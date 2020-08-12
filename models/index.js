@@ -37,5 +37,9 @@ db.Sequelize = Sequelize;
 db.nobase = require('./nobase')(sequelize, Sequelize);
 db.areacode = require('./areacode')(sequelize, Sequelize);
 db.user = require('./user')(sequelize, Sequelize);
+db.memo = require('./memo')(sequelize, Sequelize);
+
+db.user.hasMany(db.memo, {foreignKey: 'writer', sourceKey: 'Nickname', onDelete:'cascade', onUpdate: 'cascade'});
+db.memo.belongsTo(db.user, {foreignKey: 'writer', targetKey: 'Nickname'});
 
 module.exports = db;

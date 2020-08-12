@@ -88,9 +88,37 @@ router.post('/checkid', function(req, res, next) {
     .then(check => {
         var answer = ""
         if(check) {
-            answer = "중복아이디가 있습니다."
+            answer = "사용중인 아이디 입니다."
         } else {
             answer = "사용가능한 아이디 입니다."
+        }
+
+        res.json({
+            msg : answer
+        })
+    })
+    .catch(err =>{
+        console.log(err);
+        res.json({
+            msg : "통신 오류"
+        })
+    })
+})
+
+router.post('/checknick', function(req, res, next) {
+    let body = req.body;
+
+    models.user.findOne({
+        where : {
+            Nickname : body.nickname
+        }
+    })
+    .then(check => {
+        var answer = ""
+        if(check) {
+            answer = "사용중인 닉네임 입니다."
+        } else {
+            answer = "사용가능한 닉네임 입니다."
         }
 
         res.json({

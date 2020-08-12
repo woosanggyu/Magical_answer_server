@@ -194,4 +194,8 @@ router.post('/enjoydata', function(req, res, next) {
     console.log(err);
   })
 })
+
+router.post('/mymemo', function(req, res, next) {
+    
+})
 module.exports = router;
