@@ -74,7 +74,6 @@ router.post('/eatdata', function(req, res, next) {
     })
 })
 
-
 router.post('/doitdata', function(req, res, next) {
   let body = req.body;
   console.log("바디 :", body);
@@ -199,7 +198,7 @@ router.post('/enjoydata', function(req, res, next) {
   })
 })
 
-router.get('/mymemo', function(req, res, next) {
+router.post('/mymemo', function(req, res, next) {
   let logincheck = req.headers.token;
   let body = req.body;
 
@@ -228,7 +227,7 @@ router.get('/mymemo', function(req, res, next) {
   }
 })
 
-router.post('/addpost', function(req, res, next) {
+router.post('/addmemo', function(req, res, next) {
   let logincheck = req.headers.token;
   let body = req.body;
 
@@ -257,7 +256,7 @@ router.post('/addpost', function(req, res, next) {
   }
 })
 
-router.put('/updatepost', function(req, res, next) {
+router.put('/updatememo', function(req, res, next) {
   let logincheck = req.headers.token;
   let body = req.body;
 
@@ -290,7 +289,7 @@ router.put('/updatepost', function(req, res, next) {
   }
 })
 
-router.delete('/delpost', function(req, res, next) {
+router.delete('/delmemo', function(req, res, next) {
   let logincheck = req.headers.token;
   let body = req.body;
 
