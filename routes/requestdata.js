@@ -231,6 +231,9 @@ router.post('/addmemo', function(req, res, next) {
   let logincheck = req.headers.token;
   let body = req.body;
 
+  console.log(logincheck);
+  console.log(body);
+  
   if (logincheck) {
     if( verify(logincheck, secretObj.secret)) {
       models.memo.create({
@@ -310,6 +313,36 @@ router.delete('/delmemo', function(req, res, next) {
       res.json({
           answer : "다시 로그인 해주세요."
       });
+    }
+  } else {
+    console.log("토큰이 없습니다.")
+    res.json({ answer : "다시 로그인 해주세요."})
+  }
+})
+
+router.post('/memoview', function(req, res, next) {
+  let logincheck = req.headers.token;
+  let body = req.body;
+
+  if (logincheck) {
+    if( verify(logincheck, secretObj.secret)) {
+      
+      models.memo.findOne({
+        where : {
+          Writer : body.nickname,
+          no : body. no, 
+        }
+      })
+      .then(memo => {
+        res.json({ answer : memo })
+      })
+      .catch(err => {
+        console.log(err);
+        res.json({ answer : rescodeObj.ReadError })
+      })
+    } else {
+      console.log("토큰이 만료되었습니다.")
+      res.json({ answer : "다시 로그인해 주세요."})
     }
   } else {
     console.log("토큰이 없습니다.")
