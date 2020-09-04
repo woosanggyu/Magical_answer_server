@@ -16,186 +16,207 @@ router.post('/eatdata', function(req, res, next) {
     let body = req.body;
     console.log("바디 :", body);
 
-    models.areacode.findOne({
-      where: {
-        areafather : body.areafather,
-        areaname : body.areaname
-      }
-    })
-    .then(result => {
-      // console.log(result);
-
-      let dataurl = {
-        url: 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey='+process.env.SERVICE_KEY,
-        method:'GET',
-        qs: {
-          pageNo : 1,
-          numOfRows : 10,
-          MobileApp : "MagicalAnswer",
-          MobileOS : "AND",
-          arrange : "A",
-          cat1 : null,
-          contentTypeId : 39,
-          areaCode : result.areacode,
-          sigunguCode : result.sigunguCode,
-          cat2 : null,
-          cat3 : null,
-          listYN : "Y",
-          modifiedtime : null,
-        },
-        json:true
-      }
-      
-      request(dataurl, function(err, respon, body) {
-
-        var item = body.response.body.items.item;
-
-        var title = new Array;
-        var addr = new Array;
-
-        if(item) {
-          var number = getRandomInt(0, item.length-1)
-  
-          title.push(body.response.body.items.item[number].title)
-          addr.push(body.response.body.items.item[number].addr1)
-        } else {
-          title.push("없엉");
-          addr.push("진짜 없엉");
-        }
-
+    if(body.areafather === "" && body.areaname === "") {
         res.json({
-          title : title[0],
-          address : addr[0] 
+        title : "다시 시도해주세요",
+        address : "다시 시도해주세요"
         })
-      })
-    })
-    .catch(err => {
-      console.log(err);
-    })
+    } else {
+        models.areacode.findOne({
+        where: {
+            areafather : body.areafather,
+            areaname : body.areaname
+        }
+        })
+        .then(result => {
+        // console.log(result);
+
+        let dataurl = {
+            url: 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey='+process.env.SERVICE_KEY,
+            method:'GET',
+            qs: {
+            pageNo : 1,
+            numOfRows : 10,
+            MobileApp : "MagicalAnswer",
+            MobileOS : "AND",
+            arrange : "A",
+            cat1 : null,
+            contentTypeId : 39,
+            areaCode : result.areacode,
+            sigunguCode : result.sigunguCode,
+            cat2 : null,
+            cat3 : null,
+            listYN : "Y",
+            modifiedtime : null,
+            },
+            json:true
+        }
+        
+        request(dataurl, function(err, respon, body) {
+
+            var item = body.response.body.items.item;
+
+            var title = new Array;
+            var addr = new Array;
+
+            if(item) {
+            var number = getRandomInt(0, item.length-1)
+    
+            title.push(body.response.body.items.item[number].title)
+            addr.push(body.response.body.items.item[number].addr1)
+            } else {
+            title.push("없엉");
+            addr.push("진짜 없엉");
+            }
+
+            res.json({
+            title : title[0],
+            address : addr[0] 
+            })
+        })
+        })
+        .catch(err => {
+        console.log(err);
+        })
+    }
 })
 
 router.post('/doitdata', function(req, res, next) {
-  let body = req.body;
-  console.log("바디 :", body);
-
-  models.areacode.findOne({
-    where: {
-      areafather : body.areafather,
-      areaname : body.areaname
-    }
-  })
-  .then(result => {
-    // console.log(result);
-
-    let dataurl = {
-      url: 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey='+process.env.SERVICE_KEY,
-      method:'GET',
-      qs: {
-        pageNo : 1,
-        numOfRows : 100,
-        MobileApp : "MagicalAnswer",
-        MobileOS : "AND",
-        arrange : "A",
-        cat1 : "A02",
-        contentTypeId : 12,
-        areaCode : result.areacode,
-        sigunguCode : result.sigunguCode,
-        cat2 : "A0202",
-        cat3 : null,
-        listYN : "Y",
-        modifiedtime : null,
-      },
-      json:true
-    }
-    
-    request(dataurl, function(err, respon, body) {
-
-      var item = body.response.body.items.item;
-
-      var title = new Array;
-      var addr = new Array;
-
-      if(item) {
-        var number = getRandomInt(0, item.length-1)
-
-        title.push(body.response.body.items.item[number].title)
-        addr.push(body.response.body.items.item[number].addr1)
-      } else {
-        title.push("없엉");
-        addr.push("진짜 없엉");
-      }
+    let body = req.body;
+    console.log("바디 :", body);
   
+    if(body.areafather === "" && body.areaname === "") {
       res.json({
-        title : title[0],
-        address : addr[0] 
+        title : "다시 시도해주세요",
+        address : "다시 시도해주세요"
       })
-    })
+    } else {
+      models.areacode.findOne({
+        where: {
+          areafather : body.areafather,
+          areaname : body.areaname
+        }
+      })
+      .then(result => {
+        // console.log(result);
+    
+        let dataurl = {
+          url: 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey='+process.env.SERVICE_KEY,
+          method:'GET',
+          qs: {
+            pageNo : 1,
+            numOfRows : 100,
+            MobileApp : "MagicalAnswer",
+            MobileOS : "AND",
+            arrange : "A",
+            cat1 : "A02",
+            contentTypeId : 12,
+            areaCode : result.areacode,
+            sigunguCode : result.sigunguCode,
+            cat2 : "A0202",
+            cat3 : null,
+            listYN : "Y",
+            modifiedtime : null,
+          },
+          json:true
+        }
+        
+        request(dataurl, function(err, respon, body) {
+    
+          var item = body.response.body.items.item;
+    
+          var title = new Array;
+          var addr = new Array;
+    
+          if(item) {
+            var number = getRandomInt(0, item.length-1)
+    
+            title.push(body.response.body.items.item[number].title)
+            addr.push(body.response.body.items.item[number].addr1)
+          } else {
+            title.push("없엉");
+            addr.push("진짜 없엉");
+          }
+      
+          res.json({
+            title : title[0],
+            address : addr[0] 
+          })
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    }
   })
-  .catch(err => {
-    console.log(err);
-  })
-})
 
 router.post('/enjoydata', function(req, res, next) {
   let body = req.body;
   console.log("바디 :", body);
 
-  models.areacode.findOne({
-    where: {
-      areafather : body.areafather,
-      areaname : body.areaname
-    }
-  })
-  .then(result => {
-    // console.log(result);
-
-    let dataurl = {
-      url: 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey='+process.env.SERVICE_KEY,
-      method:'GET',
-      qs: {
-        pageNo : 1,
-        numOfRows : 100,
-        MobileApp : "MagicalAnswer",
-        MobileOS : "AND",
-        arrange : "A",
-        cat1 : "A02",
-        contentTypeId : 12,
-        areaCode : result.areacode,
-        sigunguCode : result.sigunguCode,
-        cat2 : "A0203",
-        cat3 : null,
-        listYN : "Y",
-        modifiedtime : null,
-      },
-      json:true
-    }
-    
-    request(dataurl, function(err, respon, body) {
-
-      var item = body.response.body.items.item;
-      
-      var title = new Array;
-      var addr = new Array;
-
-      if(item) {
-        var number = getRandomInt(0, item.length-1)
-
-        title.push(body.response.body.items.item[number].title)
-        addr.push(body.response.body.items.item[number].addr1)
-      } else {
-        title.push("없엉");
-        addr.push("진짜 없엉");
-      }
-      
-      res.json({
-        title : title[0],
-        address : addr[0] 
-      })
-    })
-  })
-  .catch(err => {
-    console.log(err);
-  })
+    if(body.areafather === "" && body.areaname === "") {
+        res.json({
+        title : "다시 시도해주세요",
+        address : "다시 시도해주세요"
+        })
+    } else {
+        models.areacode.findOne({
+            where: {
+              areafather : body.areafather,
+              areaname : body.areaname
+            }
+          })
+          .then(result => {
+            // console.log(result);
+        
+            let dataurl = {
+              url: 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?serviceKey='+process.env.SERVICE_KEY,
+              method:'GET',
+              qs: {
+                pageNo : 1,
+                numOfRows : 100,
+                MobileApp : "MagicalAnswer",
+                MobileOS : "AND",
+                arrange : "A",
+                cat1 : "A02",
+                contentTypeId : 12,
+                areaCode : result.areacode,
+                sigunguCode : result.sigunguCode,
+                cat2 : "A0203",
+                cat3 : null,
+                listYN : "Y",
+                modifiedtime : null,
+              },
+              json:true
+            }
+            
+            request(dataurl, function(err, respon, body) {
+        
+              var item = body.response.body.items.item;
+              
+              var title = new Array;
+              var addr = new Array;
+        
+              if(item) {
+                var number = getRandomInt(0, item.length-1)
+        
+                title.push(body.response.body.items.item[number].title)
+                addr.push(body.response.body.items.item[number].addr1)
+              } else {
+                title.push("없엉");
+                addr.push("진짜 없엉");
+              }
+              
+              res.json({
+                title : title[0],
+                address : addr[0] 
+              })
+            })
+          })
+          .catch(err => {
+            console.log(err);
+          })
+    }  
 })
 
 router.post('/mymemo', function(req, res, next) {
@@ -321,33 +342,37 @@ router.delete('/delmemo', function(req, res, next) {
 })
 
 router.post('/memoview', function(req, res, next) {
-  let logincheck = req.headers.token;
-  let body = req.body;
-
-  if (logincheck) {
-    if( verify(logincheck, secretObj.secret)) {
-      
-      models.memo.findOne({
-        where : {
-          Writer : body.nickname,
-          no : body. no, 
-        }
-      })
-      .then(memo => {
-        res.json({ answer : memo })
-      })
-      .catch(err => {
-        console.log(err);
-        res.json({ answer : rescodeObj.ReadError })
-      })
+    let logincheck = req.headers.token;
+    let body = req.body;
+  
+    if (logincheck) {
+      if( verify(logincheck, secretObj.secret)) {
+        
+        models.memo.findOne({
+          where : {
+            Writer : body.nickname,
+            no : body. no, 
+          }
+        })
+        .then(memo => {
+          res.json({ title : memo.title,
+                     con : memo.content })
+        })
+        .catch(err => {
+          console.log(err);
+          res.json({ title : "오류입니다 다시 시도해주세요.",
+                     con : "오류입니다 다시 시도해주세요." })
+        })
+      } else {
+        console.log("토큰이 만료되었습니다.")
+        res.json({ title : "다시 로그인 해주세요.",
+                    con : "다시 로그인 해주세요." })
+      }
     } else {
-      console.log("토큰이 만료되었습니다.")
-      res.json({ answer : "다시 로그인해 주세요."})
+      console.log("토큰이 없습니다.")
+      res.json({ title : "다시 로그인 해주세요.",
+                 con : "다시 로그인 해주세요." })
     }
-  } else {
-    console.log("토큰이 없습니다.")
-    res.json({ answer : "다시 로그인 해주세요."})
-  }
-})
+  })
 
 module.exports = router;
